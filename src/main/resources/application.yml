@@ -1,0 +1,11 @@
+#Default
+spring :
+ profiles :
+  active : "local"
+
+server:
+ port: 5000
+ servlet-path: /ebeantalk
+
+test:
+ body: application.yml is used

@@ -1,0 +1,60 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.1'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+}
+
+group = 'com.chris.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compile 'mysql:mysql-connector-java'
+    compile 'org.qlrm:qlrm:2.0.2'
+    runtimeOnly 'com.h2database:h2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+//bootJar {
+//    from('./.ebextensions') { into '.ebextensions' }
+//}
+
+ext.profile = (!project.hasProperty('profile') || !profile) ? 'local' : profile
+
+//sourceSets {
+//    main {
+//        resources {
+//            srcDirs("src/main/resources", "src/main/resources-profiles/${profile}")
+//        }
+//    }
+//}
+
+task logWhatIwant {
+    println "Build Mode: ${profile}"
+}
+
+bootRun {
+    String env = System.properties['spring.profiles.active']
+    print "Specified active profile: [" + env + "]"
+    systemProperty "spring.profiles.active", env
+}

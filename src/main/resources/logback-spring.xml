@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <timestamp key="BY_DATE" datePattern="yyyy-MM-dd"/>
+<!--  ./ : current directory absolut path (/var/app/current/)  -->
+    <property name="LOG_FILE_PATH" value="./logs"/> <!--  (/var/app/current/logs)  -->
+    <property name="LOG_BACKUP" value="./logs/backup"/> <!--  (/var/app/current/logs/backup)  -->
+    <property name="MAX_HISTORY" value="30"/>
+    <property name="LOG_PATTERN_CONSOLE"
+              value="[%d{yyyy-MM-dd HH:mm:ss}:%-4relative] %yellow([%thread]) %highlight(%-5level) [%C.%M:%line] - %msg%n"/>
+    <property name="LOG_PATTERN_FILE"
+              value="%d{yyyy-MM-dd HH:mm:ss}:%-4relative [%thread] %-5level [%C.%M:%line] - %msg%n"/>
+
+    <springProfile name="default,local">
+        <appender name="FILE-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_FILE_PATH}/system.out.log</file>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>DEBUG</level>
+                <onMatch>ACCEPT</onMatch>
+            </filter>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>INFO</level>
+                <onMatch>ACCEPT</onMatch>
+            </filter>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>TRACE</level>
+                <onMatch>ACCEPT</onMatch>
+            </filter>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>WARN</level>
+                <onMatch>ACCEPT</onMatch>
+            </filter>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>ERROR</level>
+                <onMatch>DENY</onMatch>
+            </filter>
+            <encoder>
+                <pattern>${LOG_PATTERN_FILE}</pattern>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_BACKUP}/system.out.%d{yyyy-MM-dd}.zip</fileNamePattern>
+                <maxHistory>${MAX_HISTORY}</maxHistory>
+            </rollingPolicy>
+        </appender>
+        <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_FILE_PATH}/system.error.log</file>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>ERROR</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+            <encoder>
+                <pattern>${LOG_PATTERN_FILE}</pattern>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_BACKUP}/system.error.%d{yyyy-MM-dd}.zip</fileNamePattern>
+                <maxHistory>${MAX_HISTORY}</maxHistory>
+            </rollingPolicy>
+        </appender>
+        <root level="INFO">
+            <appender-ref ref="FILE-INFO"/>
+            <appender-ref ref="FILE-ERROR"/>
+        </root>
+    </springProfile>
+</configuration>
