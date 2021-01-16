@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+//v.2
 @RestController
 public class loggingController {
 
@@ -46,7 +47,7 @@ public class loggingController {
 
 		String message = "Profile: [" + vauleInApplicationYml + "]";
 
-		return new ResponseEntity<String>(message, HttpStatus.OK);
+		return new ResponseEntity<>(message, HttpStatus.OK);
 	}
 
 	@RequestMapping("/log/info")
@@ -59,7 +60,7 @@ public class loggingController {
 
 		String message = "Profile: [" + vauleInApplicationYml + "]";
 
-		return new ResponseEntity<String>(message, HttpStatus.OK);
+		return new ResponseEntity<>(message, HttpStatus.OK);
 	}
 
 	@RequestMapping("/log/warn")
@@ -72,7 +73,7 @@ public class loggingController {
 
 		String message = "Profile: [" + vauleInApplicationYml + "]";
 
-		return new ResponseEntity<String>(message, HttpStatus.OK);
+		return new ResponseEntity<>(message, HttpStatus.OK);
 	}
 
 	@RequestMapping("/log/error")
@@ -85,7 +86,7 @@ public class loggingController {
 
 		String message = "Profile: [" + vauleInApplicationYml + "]";
 
-		return new ResponseEntity<String>(message, HttpStatus.OK);
+		return new ResponseEntity<>(message, HttpStatus.OK);
 	}
 
 	@RequestMapping("/log/syserror")
@@ -98,7 +99,7 @@ public class loggingController {
 
 		System.err.println ("[System error print]*******");
 
-		return new ResponseEntity<String>("[System error print]*******", HttpStatus.OK);
+		return new ResponseEntity<>("[System error print]*******", HttpStatus.OK);
 	}
 
 	@RequestMapping("/log/ls")
@@ -123,7 +124,7 @@ public class loggingController {
 			System.err.println (e.getCause().toString());
 		}
 
-		return new ResponseEntity<String>(returnVal.toString(), HttpStatus.OK);
+		return new ResponseEntity<>(returnVal.toString(), HttpStatus.OK);
 	}
 
 	@RequestMapping("/log/ps")
@@ -146,7 +147,7 @@ public class loggingController {
 			err.printStackTrace();
 		}
 
-		return new ResponseEntity<String>(returnVal.toString(), HttpStatus.OK);
+		return new ResponseEntity<>(returnVal.toString(), HttpStatus.OK);
 	}
 
 	@RequestMapping("/log/awslogs")
@@ -169,6 +170,6 @@ public class loggingController {
 			err.printStackTrace();
 		}
 
-		return new ResponseEntity<String>(returnVal.toString(), HttpStatus.OK);
+		return new ResponseEntity<>(returnVal.toString(), HttpStatus.OK);
 	}
 }
