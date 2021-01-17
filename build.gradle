@@ -28,8 +28,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    compile 'mysql:mysql-connector-java'
-    compile 'org.qlrm:qlrm:2.0.2'
+    compileOnly 'org.qlrm:qlrm:2.0.2'
     runtimeOnly 'com.h2database:h2'
 }
 
@@ -37,42 +36,40 @@ test {
     useJUnitPlatform()
 }
 
-ext.profile = (!project.hasProperty('profile') || !profile) ? 'local' : profile
+bootRun {
+    String env = System.properties['spring.profiles.active']
+    println "* Specified active profile: [" + env + "]"
+    systemProperty "spring.profiles.active", env
+}
 
-//sourceSets {
-//    main {
-//        resources {
-//            srcDirs("src/main/resources", "src/main/resources-profiles/${profile}")
-//        }
-//    }
-//}
+// Build configuration
+ext {
+    profile = (!project.hasProperty('profile') || !profile) ? 'local' : profile
+    zipPackagingDirPath = "$rootDir/_dist" // output directory for deployment asset zip bundle
+    elasticBeansTalkConfiAsset = "./config" // elastic beansTalk config files in .ebextensions directory
+}
 
 task showBuildProfile {
     println "* Build Mode: ${profile}" // e.g., -Pprofile=dev (Specify which application-[env].yml profile should be included.
 }
 
 // zip package includes complied JAR output file and all config file in ./config directory
-task distZip (type: Zip, dependsOn: ['cleanDist','build']) {
+task buildAndZip (type: Zip, dependsOn: ['cleanDist','build']) {
 
 //    destinationDirectory = file("$buildDir/dist") // output directory for deployment asset zip bundle
-    destinationDirectory = file("$rootDir/_dist") // output directory for deployment asset zip bundle
+    destinationDirectory = file(zipPackagingDirPath) // output directory for deployment asset zip bundle
 
     from bootJar // executable complied .jar output from build
-    from './config' // elastic beansTalk config files in .ebextensions directory
+    from file(elasticBeansTalkConfiAsset) // elastic beansTalk config files in .ebextensions directory
 
     doLast {
-        println "Packaged ZIP bundle file: " + archiveFileName.get() // display name of output zip bundle file for deployment
+        println "Deployable ZIP bundle file: " + zipPackagingDirPath + "/" + archiveFileName.get() // display name of output zip bundle file for deployment
     }
 }
 
 // cleansing '_dist' output directory
 task cleanDist(type: Delete) {
-    delete "$rootDir/_dist"
+    delete file(zipPackagingDirPath)
     followSymlinks = true
-}
-
-bootRun {
-    String env = System.properties['spring.profiles.active']
-    print "Specified active profile: [" + env + "]"
-    systemProperty "spring.profiles.active", env
+    println "Clean up ${zipPackagingDirPath} output directory..."
 }
