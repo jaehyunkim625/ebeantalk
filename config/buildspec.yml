@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto8
+  pre_build:
+    commands:
+      - ./gradlew clean
+  build:
+    commands:
+      - echo Build started
+      - java -version
+      - ./gradlew buildArtifact
+  post_build:
+    commands:
+      - echo Build completed
+artifacts:
+  files:
+    - _dist/*.zip
+  discard-paths: yes
+cache:
+  paths:
+    - '/root/.gradle/caches/**/*'
+    - '/root/.gradle/wrapper/**/*'
+    - '.gradle/**/*'
