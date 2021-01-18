@@ -78,7 +78,6 @@ task buildNonZipArtifact(type: Copy, dependsOn: ['cleanDist','build']) {
 
     into file(zipPackagingDirPath)
 
-
     doLast{
         FileTree tree = fileTree(zipPackagingDirPath)
         tree.each {
