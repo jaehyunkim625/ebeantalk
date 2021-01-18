@@ -17,10 +17,11 @@ phases:
       - echo Build completed
 artifacts:
   files:
-    - _dist/*.jar
-    - _dist/.ebextensions/**/*
-    - _dist/Procfile
-#  base-directory: '_dist'
+#    - _dist/*.jar
+#    - _dist/.ebextensions/**/*
+#    - _dist/Procfile
+     - '**/*'
+  base-directory: '_dist'
   discard-paths: yes
 cache:
   paths:
