@@ -58,7 +58,7 @@ task showBuildProfile {
 }
 
 // zip package includes complied JAR output file and all config file in ./config directory
-task buildArtifact (type: Zip, dependsOn: ['cleanDist','build']) {
+task buildZipArtifact (type: Zip, dependsOn: ['cleanDist','build']) {
 
 //    destinationDirectory = file("$buildDir/dist") // output directory for deployment asset zip bundle
     destinationDirectory = file(zipPackagingDirPath) // output directory for deployment asset zip bundle
@@ -68,6 +68,21 @@ task buildArtifact (type: Zip, dependsOn: ['cleanDist','build']) {
 
     doLast {
         println "Deployable ZIP bundle file: " + zipPackagingDirPath + "/" + archiveFileName.get() // display name of output zip bundle file for deployment
+    }
+}
+
+task buildNonZipArtifact(type: Copy, dependsOn: ['cleanDist','build']) {
+
+    from bootJar // executable complied .jar output from build
+    from file(elasticBeansTalkConfigAsset) // elastic beansTalk config files in .ebextensions directory + Procfile
+
+    into file(zipPackagingDirPath)
+
+    doLast{
+        FileTree tree = fileTree(zipPackagingDirPath)
+        tree.each {
+            println it.name
+        }
     }
 }
 
