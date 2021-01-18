@@ -54,7 +54,7 @@ task showBuildProfile {
 }
 
 // zip package includes complied JAR output file and all config file in ./config directory
-task buildAndZip (type: Zip, dependsOn: ['cleanDist','build']) {
+task buildArtifact (type: Zip, dependsOn: ['cleanDist','build']) {
 
 //    destinationDirectory = file("$buildDir/dist") // output directory for deployment asset zip bundle
     destinationDirectory = file(zipPackagingDirPath) // output directory for deployment asset zip bundle
