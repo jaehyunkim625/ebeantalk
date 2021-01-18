@@ -11,7 +11,7 @@ phases:
     commands:
       - echo Build started
       - java -version
-      - ./gradlew buildArtifact
+      - ./gradlew buildNonZipArtifact
   post_build:
     commands:
       - echo Build completed
