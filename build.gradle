@@ -57,7 +57,8 @@ task showBuildProfile {
     println "* Build Mode: ${profile}" // e.g., -Pprofile=dev (Specify which application-[env].yml profile should be included.
 }
 
-// zip package includes complied JAR output file and all config file in ./config directory
+// Build Mode 1 [For BeansTalk Console Manual Deploy] zip package includes complied JAR output file and all config file in ./config directory
+// Command Usage: ./gradlew clean buildZipArtifact
 task buildZipArtifact (type: Zip, dependsOn: ['cleanDist','build']) {
 
 //    destinationDirectory = file("$buildDir/dist") // output directory for deployment asset zip bundle
@@ -67,10 +68,11 @@ task buildZipArtifact (type: Zip, dependsOn: ['cleanDist','build']) {
     from file(elasticBeansTalkConfigAsset) // elastic beansTalk config files in .ebextensions directory + Procfile
 
     doLast {
-        println "Deployable ZIP bundle file: " + zipPackagingDirPath + "/" + archiveFileName.get() // display name of output zip bundle file for deployment
+        println "Deployable ZIP Artifact bundle file: " + zipPackagingDirPath + "/" + archiveFileName.get() // display name of output zip bundle file for deployment
     }
 }
-
+// Build Mode 2 [For BeansTalk CodePipeline Deploy] it doesn't zip the out artifacts like .jar .ebextensions directory and inside .config files
+// Command Usage: ./gradlew clean buildNonZipArtifact
 task buildNonZipArtifact(type: Copy, dependsOn: ['cleanDist','build']) {
 
     from bootJar // executable complied .jar output from build
@@ -86,7 +88,7 @@ task buildNonZipArtifact(type: Copy, dependsOn: ['cleanDist','build']) {
     }
 }
 
-// cleansing '_dist' output directory
+// clean up '_dist' Artifacts output directory before starting build
 task cleanDist(type: Delete) {
     delete file(zipPackagingDirPath)
     followSymlinks = true
